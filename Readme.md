@@ -12,6 +12,6 @@ Node: v16.14.0
 3. Navigate to http://localhost:8080
 
 # References
-https://www.youtube.com/watch?v=Ix-c2X7dlks&ab_channel=HusseinNasser
-https://developer.mozilla.org/en-US/docs/Web/API/FileReader
-https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+- https://www.youtube.com/watch?v=Ix-c2X7dlks&ab_channel=HusseinNasser
+- https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+- https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
