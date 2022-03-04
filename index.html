@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>File uploader</h1>
+
+        <input type='file' id="fileUploaderInput" />
+        <button id ='uploadButton'>Read & Upload</button>
+        <div id="output" />
+    </body>
+    <script>
+        const btnUpload = document.getElementById('uploadButton');
+        const divOutput = document.getElementById('output');
+        const fileUploaderInput = document.getElementById('fileUploaderInput')
+
+        btnUpload.addEventListener("click", () => {
+            const fileReader = new FileReader();
+            const file = fileUploaderInput.files.length > 0 && fileUploaderInput.files[0];
+            fileReader.onload = async ev => {
+                const CHUNK_SIZE = 1000;
+                const numBytesInFile = ev.target.result.byteLength;
+                const numChunks = Math.ceil(numBytesInFile / CHUNK_SIZE)
+                const fileName = Math.random() * 1000 + file.name;
+                console.log(`${fileName} read successfully`);
+                for (let chunkId = 0; chunkId < numChunks; chunkId++) {
+                    const startByte = chunkId*CHUNK_SIZE;
+                    const endByte = startByte+CHUNK_SIZE;
+                    const chunk = (endByte <= numBytesInFile) 
+                        ? ev.target.result.slice(startByte, endByte)
+                        : ev.target.result.slice(startByte, numBytesInFile);
+                    console.log(chunk);
+                    const serverRes = await fetch("http://localhost:8080/upload", {
+                        "method": "POST",
+                        "headers": {
+                            "content-type": "application/octet-stream",
+                            "content-length": chunk.length,
+                            "file-name": fileName,
+                            "chunk-index": chunkId,
+                            "num-chunks": numChunks,
+                            "chunk-size": CHUNK_SIZE
+                        },
+                        "body": chunk
+                    })
+                }
+            }
+            !file && window.alert("Please select a file");
+            const test = file && fileReader.readAsArrayBuffer(file);
+        })
+    </script>
+</html>
